@@ -2,7 +2,7 @@ package main
 
 import (
 	"MessagesService/internal/app"
-	"MessagesService/internal/pkg/services/messages_service"
+	"MessagesService/internal/pkg/services/store"
 	"MessagesService/internal/server"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -17,7 +17,7 @@ func getFxOptions() fx.Option {
 		fx.WithLogger(getEventLogger),
 		fx.Provide(
 			zap.NewDevelopment,
-			messages_service.NewMessageService,
+			store.NewStore,
 			app.NewApplication,
 			server.NewServer,
 		),

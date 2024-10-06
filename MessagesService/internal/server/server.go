@@ -30,16 +30,18 @@ func NewServer(app *app.Application) *Server {
 }
 
 func (s *Server) setupRoutes() {
+	s.echo.POST("/messages/create", s.app.CreateMessage())
+	s.echo.PUT("/messages/like", s.app.LikeMessage())
 }
 
 func (s *Server) Start(address string) error {
-	s.logger.Infof("Starting messages_service on address: %v", address)
+	s.logger.Infof("Starting store on address: %v", address)
 
 	return s.echo.Start(address)
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
-	s.logger.Info("Shutting down messages_service")
+	s.logger.Info("Shutting down store")
 
 	return s.echo.Shutdown(ctx)
 }
