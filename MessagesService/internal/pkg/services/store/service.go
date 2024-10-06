@@ -1,8 +1,9 @@
 package store
 
 import (
+	"MessagesService/gen/a5/public/table"
 	"MessagesService/internal/dependencies"
-	"MessagesService/internal/pkg/models"
+	"MessagesService/internal/pkg/types"
 	"context"
 	"errors"
 	"github.com/google/uuid"
@@ -27,10 +28,14 @@ func NewStore(l *zap.Logger) (dependencies.IStore, error) {
 	}, nil
 }
 
-func (s *Store) InsertMessage(ctx context.Context, msg *models.Message) (*models.Message, error) {
+func (s *Store) InsertMessage(ctx context.Context, msg *types.Message) (*types.Message, error) {
+	stmt := table.Messages.
+		INSERT(table.Messages.AllColumns).
+		MODEL(msg)
+
 	return nil, errors.New("not implemented")
 }
 
-func (s *Store) LikeMessage(ctx context.Context, username string, id uuid.UUID) (*models.Message, error) {
+func (s *Store) LikeMessage(ctx context.Context, username string, id uuid.UUID) (*types.Message, error) {
 	return nil, errors.New("not implemented")
 }

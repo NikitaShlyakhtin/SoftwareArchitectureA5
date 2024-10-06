@@ -1,13 +1,13 @@
-package models
+package types
 
 import "github.com/google/uuid"
 
 // Message represents a feed message
 type Message struct {
-	ID       uuid.UUID `json:"id"` // UUIDv7
-	Username string    `json:"username"`
-	Content  string    `json:"content"`
-	IsLiked  bool      `json:"is_liked"`
+	ID       uuid.UUID `db:"id" json:"id"` // UUIDv7
+	Username string    `db:"username" json:"username"`
+	Content  string    `db:"content" json:"content"`
+	IsLiked  bool      `db:"is_liked" json:"is_liked"`
 }
 
 // NewMessage creates a new Message instance

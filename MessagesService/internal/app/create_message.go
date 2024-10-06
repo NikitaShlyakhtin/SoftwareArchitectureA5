@@ -1,7 +1,7 @@
 package app
 
 import (
-	"MessagesService/internal/pkg/models"
+	"MessagesService/internal/pkg/types"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
@@ -52,6 +52,6 @@ func validateCreateMessageRequest(req *createMessageRequest) error {
 	return nil
 }
 
-func bindMessage(req *createMessageRequest) *models.Message {
-	return models.NewMessage(uuid.Must(uuid.NewV7()), req.Username, req.Content, false)
+func bindMessage(req *createMessageRequest) *types.Message {
+	return types.NewMessage(uuid.Must(uuid.NewV7()), req.Username, req.Content, false)
 }
