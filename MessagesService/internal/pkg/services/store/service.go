@@ -5,6 +5,7 @@ import (
 	"MessagesService/internal/pkg/models"
 	"context"
 	"errors"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -27,5 +28,9 @@ func NewStore(l *zap.Logger) (dependencies.IStore, error) {
 }
 
 func (s *Store) InsertMessage(ctx context.Context, msg *models.Message) (*models.Message, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (s *Store) LikeMessage(ctx context.Context, username string, id uuid.UUID) (*models.Message, error) {
 	return nil, errors.New("not implemented")
 }
