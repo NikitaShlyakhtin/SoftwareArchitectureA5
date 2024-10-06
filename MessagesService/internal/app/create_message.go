@@ -1,9 +1,9 @@
 package app
 
 import (
+	"MessagesService/internal/pkg/services/store"
 	"MessagesService/internal/pkg/types"
 	"errors"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -13,18 +13,22 @@ func (app *Application) CreateMessage() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var req *createMessageRequest
 		if err := c.Bind(&req); err != nil {
-			return c.JSON(http.StatusBadRequest, fmt.Errorf("invalid request body, err: %w", err))
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
 		if err := validateCreateMessageRequest(req); err != nil {
-			return c.JSON(http.StatusBadRequest, fmt.Errorf("invalid request body, err: %w", err))
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
 		msg := bindMessage(req)
 
-		insertedMsg, err := app.Store.InsertMessage(c.Request().Context(), msg)
+		insertedMsg, err := app.Store.InsertMessage(msg)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Errorf("failed to insert new message, err: %w", err))
+			app.Logger.Errorf("failed to create message, err: %v", err)
+			if errors.Is(err, store.ErrUsernameDoesNotExist) {
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			}
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Internal Server Error"})
 		}
 
 		return c.JSON(http.StatusCreated, insertedMsg)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"MessagesService/internal/app"
+	"MessagesService/internal/dependencies"
 	"MessagesService/internal/pkg/services/store"
 	"MessagesService/internal/server"
 	"go.uber.org/fx"
@@ -17,10 +18,10 @@ func getFxOptions() fx.Option {
 		fx.WithLogger(getEventLogger),
 		fx.Provide(
 			zap.NewDevelopment,
-			store.NewStore,
+			fx.Annotate(store.NewStore, fx.As(new(dependencies.IStore))),
 			app.NewApplication,
 			server.NewServer,
 		),
-		fx.Invoke(startServer),
+		fx.Invoke(startServer, startStore),
 	)
 }

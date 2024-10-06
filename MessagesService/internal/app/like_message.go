@@ -1,8 +1,8 @@
 package app
 
 import (
+	"MessagesService/internal/pkg/services/store"
 	"errors"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -12,16 +12,20 @@ func (app *Application) LikeMessage() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var req *likeMessageRequest
 		if err := c.Bind(&req); err != nil {
-			return c.JSON(http.StatusBadRequest, fmt.Errorf("invalid request body, err: %w", err))
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
 		if err := validateLikeMessageRequest(req); err != nil {
-			return c.JSON(http.StatusBadRequest, fmt.Errorf("invalid request body, err: %w", err))
+			return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
 		}
 
-		likedMessage, err := app.Store.LikeMessage(c.Request().Context(), req.Username, uuid.MustParse(req.ID))
+		likedMessage, err := app.Store.LikeMessage(uuid.MustParse(req.ID))
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, fmt.Errorf("failed to like message, err: %w", err))
+			app.Logger.Errorf("failed to like message, err: %v", err)
+			if errors.Is(err, store.ErrUsernameDoesNotExist) {
+				return c.JSON(http.StatusBadRequest, map[string]string{"message": err.Error()})
+			}
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Internal Server Error"})
 		}
 
 		return c.JSON(http.StatusOK, likedMessage)
@@ -29,15 +33,10 @@ func (app *Application) LikeMessage() echo.HandlerFunc {
 }
 
 type likeMessageRequest struct {
-	Username string `json:"username"`
-	ID       string `json:"id"`
+	ID string `json:"id"`
 }
 
 func validateLikeMessageRequest(req *likeMessageRequest) error {
-	if req.Username == "" {
-		return errors.New("username must be provided")
-	}
-
 	if req.ID == "" {
 		return errors.New("message ID must be provided")
 	}
