@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 
 app = Flask('user_management_service')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:password@db:5432/a5?sslmode=disable'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@db:5432/a5?sslmode=disable'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
