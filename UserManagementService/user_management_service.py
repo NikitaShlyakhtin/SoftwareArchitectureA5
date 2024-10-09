@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     tablename = 'users'
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), primary_key=True)
 
 
 with app.app_context():
@@ -49,4 +49,4 @@ def login_user():
     return jsonify({"login": user_exists})
 
 
-app.run(debug=True)
+app.run(host='0.0.0.0', port=5001, debug=True)

@@ -17,8 +17,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      POSTGRES_DSN: postgresql://postgres:password@db:5432/a5?sslmode=disable
     ports:
       - "5001:5001"
 
@@ -29,8 +27,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      POSTGRES_DSN: postgresql://postgres:password@db:5432/a5?sslmode=disable
     ports:
       - "5002:5002"
 

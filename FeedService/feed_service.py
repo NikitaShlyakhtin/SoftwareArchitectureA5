@@ -25,11 +25,11 @@ with app.app_context():
 
 @app.route('/feed', methods=['GET'])
 def get_feed():
-    messages = Message.query.order_by(Message.timestamp.desc()).limit(10).all()
+    messages = Message.query.order_by(Message.id).limit(10).all()
     messages_list = [
         {'id': str(message.id), 'content': message.content, 'username': message.username, 'is_liked': message.is_liked}
         for message in messages]
     return jsonify(messages_list)
 
 
-app.run(debug=True)
+app.run(host='0.0.0.0', port=5002, debug=True)
