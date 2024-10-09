@@ -10,19 +10,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+
 class Message(db.Model):
     tablename = 'messages'
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid7())
     content = db.Column(db.String, nullable=False)
-    timestamp = db.Column(db.TIMESTAMP, nullable=False)
+    username = db.Column(db.String, nullable=False)
+    is_liked = db.Column(db.Boolean, nullable=False)
+
 
 with app.app_context():
     db.create_all()
 
+
 @app.route('/feed', methods=['GET'])
 def get_feed():
     messages = Message.query.order_by(Message.timestamp.desc()).limit(10).all()
-    messages_list = [{'id': str(message.id), 'content': message.content, 'timestamp': message.timestamp.isoformat()} for message in messages]
+    messages_list = [
+        {'id': str(message.id), 'content': message.content, 'username': message.username, 'is_liked': message.is_liked}
+        for message in messages]
     return jsonify(messages_list)
+
 
 app.run(debug=True)
