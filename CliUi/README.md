@@ -11,4 +11,4 @@ python cli.py createMessage <Name> <"Message">
 
 python cli.py likeMessage <Name> <Message id>
 
-python cli.py displayFeed
+python cli.py showFeed
