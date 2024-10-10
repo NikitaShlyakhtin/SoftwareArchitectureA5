@@ -11,7 +11,7 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    tablename = 'users'
+    __tablename__ = 'users'
     username = db.Column(db.String(80), primary_key=True)
 
 
@@ -37,6 +37,10 @@ def register_user():
         db.session.rollback()
         return jsonify({"error": "User already exists"}), 400
 
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/users/login', methods=['GET'])
 def login_user():
@@ -45,8 +49,10 @@ def login_user():
     if not username:
         return jsonify({"error": "Username is required"}), 400
 
-    user_exists = db.session.query(User.username).filter_by(username=username).scalar() is not None
+    user_exists = db.session.query(User.username).filter_by(
+        username=username).scalar() is not None
     return jsonify({"login": user_exists})
 
 
-app.run(host='0.0.0.0', port=5001, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
