@@ -30,3 +30,23 @@ PostgreSQL database, Messages Service, User Management Service, Feed Service and
 
 ### How to test:
 
+Attach to container with CLI:
+
+```
+docker attach $(docker ps -a -q --filter ancestor=a5-cli_ui --format="{{.ID}}")
+```
+
+Or user `docker ps` to view active containers, copy `id` for container with `a5_cli_ui` service and run
+`docker attach <id>` with that id
+
+Then you can test application using following commands:
+
+```
+register <Name>
+
+createMessage <Username> <Message>
+
+likeMessage <Username> <Message>
+
+showFeed
+```
